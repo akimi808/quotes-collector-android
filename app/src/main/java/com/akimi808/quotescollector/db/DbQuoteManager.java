@@ -25,7 +25,7 @@ public class DbQuoteManager implements QuoteManager {
     private QuoteDbOpenHelper helper;
     private List<DataChangedListener> listeners = new ArrayList<>();
 
-    public static DbQuoteManager getInstance(Context context) {
+    public static synchronized DbQuoteManager getInstance(Context context) {
         if (instance == null) {
             instance = new DbQuoteManager(new QuoteDbOpenHelper(context));
         }
@@ -226,5 +226,75 @@ public class DbQuoteManager implements QuoteManager {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.delete("quotes", null, null);
         dataChanged();
+    }
+
+    @Override
+    public int getAuthorCount() {
+        return (int) DatabaseUtils.queryNumEntries(helper.getReadableDatabase(), "authors");
+    }
+
+    @Override
+    public Author getAuthorByIndex(int index) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String limit = (index > 0 ? index + ", " : "") + "1";
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(
+                    "SELECT " +
+                            "a.id author_id, " +
+                            "a.name author_name " +
+                            "FROM authors a " +
+                            "ORDER BY a.id asc " +
+                            "LIMIT " + limit, null);
+            if (cursor.moveToFirst()) {
+                Long authorId = cursor.getLong(cursor.getColumnIndex("author_id"));
+                String authorName = cursor.getString(cursor.getColumnIndex("author_name"));
+
+                return new Author(authorId, authorName);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        throw new RuntimeException();
+    }
+
+    @Override
+    public int getSourceCount() {
+        return (int) DatabaseUtils.queryNumEntries(helper.getReadableDatabase(), "sources");
+    }
+
+    @Override
+    public Source getSourceByIndex(int index) {
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String limit = (index > 0 ? index + ", " : "") + "1";
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(
+                    "SELECT " +
+                            "s.id source_id, " +
+                            "s.title source_title, " +
+                            "s.type source_type, " +
+                            "s.application source_application, " +
+                            "s.external_id source_external_id " +
+                            "FROM sources s " +
+                            "ORDER BY s.id asc " +
+                            "LIMIT " + limit, null);
+            if (cursor.moveToFirst()) {
+                Long sourceId = cursor.getLong(cursor.getColumnIndex("source_id"));
+                String sourceExternalId = cursor.getString(cursor.getColumnIndex("source_external_id"));
+                String sourceTitle = cursor.getString(cursor.getColumnIndex("source_title"));
+                String sourceType = cursor.getString(cursor.getColumnIndex("source_type"));
+                String sourceApp = cursor.getString(cursor.getColumnIndex("source_application"));
+
+                return new Source(sourceId, sourceTitle, sourceType, sourceApp, sourceExternalId);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        throw new RuntimeException();
     }
 }

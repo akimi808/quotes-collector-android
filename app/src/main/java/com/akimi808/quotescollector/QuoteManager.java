@@ -1,5 +1,7 @@
 package com.akimi808.quotescollector;
 
+import android.widget.TextView;
+
 import com.akimi808.quotescollector.model.Author;
 import com.akimi808.quotescollector.model.Quote;
 import com.akimi808.quotescollector.model.Source;
@@ -33,6 +35,14 @@ public interface QuoteManager {
     void registerForDataChanged(DataChangedListener listener);
 
     void deleteQuotes();
+
+    int getAuthorCount();
+
+    Author getAuthorByIndex(int index);
+
+    int getSourceCount();
+
+    Source getSourceByIndex(int index);
 
 
     /**
