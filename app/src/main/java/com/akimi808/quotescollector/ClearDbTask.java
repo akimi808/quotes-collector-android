@@ -18,7 +18,7 @@ class ClearDbTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... voids) {
-        quoteManager.deleteQuotes();
+        quoteManager.deleteData();
         return null;
     }
 

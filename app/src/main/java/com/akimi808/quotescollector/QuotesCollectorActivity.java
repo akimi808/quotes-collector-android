@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.akimi808.quotescollector.db.DbQuoteManager;
 import com.akimi808.quotescollector.fragments.AuthorFragment;
 import com.akimi808.quotescollector.fragments.QuoteListFragment;
 import com.akimi808.quotescollector.fragments.SourceFragment;
@@ -112,18 +113,21 @@ public class QuotesCollectorActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.main_menu_sync:
+                new SynchronizeTask(this, DbQuoteManager.getInstance(this)).execute((Void[]) null);
+                return true;
+            case R.id.main_menu_clear_db:
+                clearDb();
+                return true;
         }
-
-        return super.onOptionsItemSelected(item);
+        return false;
     }
+
+    private void clearDb() {
+        new ClearDbTask(this, DbQuoteManager.getInstance(this)).execute((Void[]) null);
+    }
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override

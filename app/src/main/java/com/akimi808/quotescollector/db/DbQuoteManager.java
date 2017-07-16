@@ -222,9 +222,11 @@ public class DbQuoteManager implements QuoteManager {
     }
 
     @Override
-    public void deleteQuotes() {
+    public void deleteData() {
         SQLiteDatabase db = helper.getWritableDatabase();
         db.delete("quotes", null, null);
+        db.delete("authors", null, null);
+        db.delete("sources", null, null);
         dataChanged();
     }
 

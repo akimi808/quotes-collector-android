@@ -34,7 +34,7 @@ public interface QuoteManager {
 
     void registerForDataChanged(DataChangedListener listener);
 
-    void deleteQuotes();
+    void deleteData();
 
     int getAuthorCount();
 
