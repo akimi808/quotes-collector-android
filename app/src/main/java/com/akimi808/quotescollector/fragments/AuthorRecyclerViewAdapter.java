@@ -1,5 +1,7 @@
 package com.akimi808.quotescollector.fragments;
 
+import android.app.Activity;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,14 +20,18 @@ import com.akimi808.quotescollector.model.Author;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class AuthorRecyclerViewAdapter extends RecyclerView.Adapter<AuthorRecyclerViewAdapter.ViewHolder> {
+public class AuthorRecyclerViewAdapter extends RecyclerView.Adapter<AuthorRecyclerViewAdapter.ViewHolder> implements QuoteManager.DataChangedListener {
 
     private final OnListFragmentInteractionListener listener;
+    private Activity activity;
     private QuoteManager quoteManager;
 
-    public AuthorRecyclerViewAdapter(QuoteManager quoteManager, OnListFragmentInteractionListener listener) {
+
+    public AuthorRecyclerViewAdapter(QuoteManager quoteManager, OnListFragmentInteractionListener listener, Activity activity) {
         this.quoteManager = quoteManager;
         this.listener = listener;
+        this.activity = activity;
+        quoteManager.registerForDataChanged(this);
     }
 
     @Override
@@ -56,6 +62,16 @@ public class AuthorRecyclerViewAdapter extends RecyclerView.Adapter<AuthorRecycl
     @Override
     public int getItemCount() {
         return quoteManager.getAuthorCount();
+    }
+
+    @Override
+    public void onDataChanged() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

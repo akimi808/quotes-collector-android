@@ -58,7 +58,7 @@ public class SourceFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new SourceRecyclerViewAdapter(quoteManager, listener));
+            recyclerView.setAdapter(new SourceRecyclerViewAdapter(quoteManager, listener, getActivity()));
         return view;
     }
 
