@@ -31,7 +31,6 @@ public class AuthorRecyclerViewAdapter extends RecyclerView.Adapter<AuthorRecycl
         this.quoteManager = quoteManager;
         this.listener = listener;
         this.activity = activity;
-        quoteManager.registerForDataChanged(this);
     }
 
     @Override
@@ -62,6 +61,18 @@ public class AuthorRecyclerViewAdapter extends RecyclerView.Adapter<AuthorRecycl
     @Override
     public int getItemCount() {
         return quoteManager.getAuthorCount();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        quoteManager.registerForDataChanged(this);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        quoteManager.unregisterForDataChanged(this);
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override

@@ -21,7 +21,6 @@ public class QuoteAdapter extends RecyclerView.Adapter<QuoteAdapter.QuoteViewHol
     public QuoteAdapter(QuoteManager quoteManager, Activity activity) {
         this.quoteManager = quoteManager;
         this.activity = activity;
-        quoteManager.registerForDataChanged(this);
     }
 
     //метод вызывается, когда RecyclerView нуждается еще одном экз. View элемента
@@ -42,6 +41,18 @@ public class QuoteAdapter extends RecyclerView.Adapter<QuoteAdapter.QuoteViewHol
     @Override
     public int getItemCount() {
         return quoteManager.getQuoteCount();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        quoteManager.registerForDataChanged(this);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        quoteManager.unregisterForDataChanged(this);
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     //метод, который будет вызван QuoteManager'ом,когда данные изменятся, и хотим, чтоб QuoteAdapter уведомили о том, что данные изм.

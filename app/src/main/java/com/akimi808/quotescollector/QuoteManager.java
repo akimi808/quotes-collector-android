@@ -44,6 +44,8 @@ public interface QuoteManager {
 
     Source getSourceByIndex(int index);
 
+    void unregisterForDataChanged(DataChangedListener listener);
+
 
     /**
      * Created by akimi808 on 05/03/2017.

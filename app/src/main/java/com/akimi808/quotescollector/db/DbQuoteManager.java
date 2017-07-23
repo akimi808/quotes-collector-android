@@ -13,7 +13,9 @@ import com.akimi808.quotescollector.model.Quote;
 import com.akimi808.quotescollector.model.Source;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by akimi808 on 13/12/2016.
@@ -23,7 +25,7 @@ public class DbQuoteManager implements QuoteManager {
     private static DbQuoteManager instance;
 
     private QuoteDbOpenHelper helper;
-    private List<DataChangedListener> listeners = new ArrayList<>();
+    private Set<DataChangedListener> listeners = new HashSet<>();
 
     public static synchronized DbQuoteManager getInstance(Context context) {
         if (instance == null) {
@@ -298,5 +300,10 @@ public class DbQuoteManager implements QuoteManager {
             }
         }
         throw new RuntimeException();
+    }
+
+    @Override
+    public void unregisterForDataChanged(DataChangedListener listener) {
+        listeners.remove(listener);
     }
 }

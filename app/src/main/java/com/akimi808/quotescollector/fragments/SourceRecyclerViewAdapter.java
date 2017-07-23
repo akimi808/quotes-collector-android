@@ -31,7 +31,6 @@ public class SourceRecyclerViewAdapter extends RecyclerView.Adapter<SourceRecycl
         this.quoteManager = quoteManager;
         this.listener = listener;
         this.activity = activity;
-        quoteManager.registerForDataChanged(this);
     }
 
     @Override
@@ -62,6 +61,18 @@ public class SourceRecyclerViewAdapter extends RecyclerView.Adapter<SourceRecycl
     @Override
     public int getItemCount() {
         return quoteManager.getSourceCount();
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        quoteManager.registerForDataChanged(this);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        quoteManager.unregisterForDataChanged(this);
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     @Override
